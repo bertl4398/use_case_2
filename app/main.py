@@ -1,3 +1,4 @@
+import io
 import secrets
 
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
@@ -7,6 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from minio import Minio
 from minio.error import (ResponseError, BucketAlreadyOwnedByYou,
                          BucketAlreadyExists)
+
+from typing import List
+from pydantic import BaseModel
+
+
+class Data(BaseModel):
+    hr: List[int] = []
 
 
 minioClient = Minio('minio:9000',
@@ -39,7 +47,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     return credentials.username
 
 
-@app.post("/upload/")
+@app.post("/upload/video")
 async def create_upload_video(file: UploadFile = File(...),
                               username: str = Depends(get_current_username)):
     contents = await file.read()
@@ -63,4 +71,29 @@ async def create_upload_video(file: UploadFile = File(...),
     except ResponseError as err:
         print(err)
 
+    return {"message": "success"}
+
+
+@app.post("/upload/data")
+async def create_upload_data(data: Data,
+                             username: str = Depends(get_current_username)):
+    output = io.BytesIO()
+    output_len = output.write(bytes(data.hr))
+    output.seek(0)
+
+    # Make a bucket with the make_bucket API call.
+    try:
+        minioClient.make_bucket(username)
+    except BucketAlreadyOwnedByYou as err:
+        pass
+    except BucketAlreadyExists as err:
+        pass
+    except ResponseError as err:
+        raise
+
+    # Put an object 'debug.log' with contents from 'debug.log'.
+    try:
+        minioClient.put_object(username, 'heartrate.dat', output, output_len)
+    except ResponseError as err:
+        print(err)
     return {"message": "success"}

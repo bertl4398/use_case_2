@@ -181,22 +181,28 @@
             formData.append("file", blob);
 
             var url = $('input[name="url"]').val();
+            url = url.replace(/\/+$/, "");
+
             var username = $('input[name="username"]').val();
             var password = $('input[name="password"]').val();
 
-            var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                    $('.alert').removeAttr('hidden');
-                }
-            }
-
             if (url && username && password) {
-                xmlhttp.open("POST", url, true);
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                        $('.alert').removeAttr('hidden');
+                    }
+                }
+                xmlhttp.open("POST", url + "/upload/video", true);
                 // xmlhttp.setRequestHeader("Content-Type","multipart/form-data");
                 xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
                 xmlhttp.send(formData);
 
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", url + "/upload/data", true);
+                // xmlhttp.setRequestHeader("Content-Type","multipart/form-data");
+                xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+                xmlhttp.send(JSON.stringify({ "hr": heartrate }));
                 // xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 // xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
                 // xmlhttp.send(JSON.stringify({ "message": "hello there!" }));
