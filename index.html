@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Remote Patient Monitoring</title>
+    <style>
+        #videoElement {
+            width: 500px;
+            height: 375px;
+            background-color: #666;
+        }
+
+        .list-group-item.active {
+            color: #495057;
+            background-color: #e9ecef;
+            border-color: #e9ecef;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Remote Patient Monitoring</a>
+    </nav>
+    <div class="container" style="margin-top:80px">
+        <div class="alert alert-success alert-dismissible fade show" role="alert" hidden=true>
+            <strong>Data uploaded!</strong> You can upload again or close the application.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <p style="font-size:40px;">Video</p>
+                <video autoplay="true" id="videoElement">
+            </div>
+            <div class="col">
+                <p style="font-size:40px;">Exercises</p>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Look close to the camera</h5>
+                            <small>10 sec</small>
+                        </div>
+                        <p class="mb-1">Look close to the camera with both eyes for about 10 seconds.</p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Breathe deeply</h5>
+                            <small class="text-muted">2 min</small>
+                        </div>
+                        <p class="mb-1">Breathe steady and deeply for about 2 min.</p>
+                        <small class="text-muted">Make sure you have resting heartrate.</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Exercise</h5>
+                            <small class="text-muted">5 min</small>
+                        </div>
+                        <p class="mb-1">Do your exercise for about 5 minutes.</p>
+                        <small class="text-muted">Video can be paused for the duration.</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <p style="font-size:40px;">Heartrate</p>
+                <i id="heartrate-icon" class="fa fa-heartbeat" style="font-size:60px;color:red;opacity:1"></i>
+                <p id="heartrate" style="font-size:40px;color:red;">0</p>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">/ </span>
+                    </div>
+                    <input name="url" type="text" class="form-control" placeholder="URL" aria-label="URL"
+                        aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">@</span>
+                    </div>
+                    <input name="username" type="text" class="form-control" placeholder="Username" aria-label="Username"
+                        aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"># </span>
+                    </div>
+                    <input name="password" type="password" class="form-control" placeholder="Password"
+                        aria-label="Password" aria-describedby="basic-addon1">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <button id="record" class="btn btn-danger" disabled>Start Recording</button>
+            </div>
+            <div class="col">
+                <button id="upload" class="btn btn-success" disabled>Upload Data</button>
+                <button id="test-upload" class="btn btn-info">Test Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        var recordButton, stopButton, testButton, recorder, liveStream;
+        var heartrate = new Array();
+        var video = document.querySelector("#videoElement");
+        recordButton = document.getElementById("record");
+        stopButton = document.getElementById("upload");
+        testButton = document.getElementById("test-upload");
+        // testButton.addEventListener('click', uploadTestData);
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+                .then(function (stream) {
+                    liveStream = stream;
+                    video.srcObject = stream;
+
+                    recordButton.disabled = false;
+                    recordButton.addEventListener('click', startRecording);
+                    stopButton.addEventListener('click', stopRecording);
+                })
+                .catch(function (err0r) {
+                    console.log("Something went wrong!");
+                });
+        }
+        function updateHeartRate() {
+            var hr = Math.floor((Math.random() * 126) + 10);
+            heartrate.push(hr);
+            document.getElementById("heartrate").innerHTML = hr;
+
+            $("#heartrate-icon").animate({ 'opacity': 0 }, 200);
+            $("#heartrate-icon").animate({ 'opacity': 1 }, 200);
+
+            setTimeout(updateHeartRate, 1000);
+        }
+        function startRecording() {
+            recorder = new MediaRecorder(liveStream);
+            recorder.addEventListener('dataavailable', onRecordingReady);
+
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+
+            recorder.start();
+            updateHeartRate();
+        }
+        function stopRecording() {
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+
+            // Stopping the recorder will eventually trigger the 'dataavailable' event and we can complete the recording process
+            recorder.stop();
+        }
+        function onRecordingReady(e) {
+            var blob = e.data;
+
+            var formData = new FormData();
+            formData.append("file", blob);
+
+            var url = $('input[name="url"]').val();
+            var username = $('input[name="username"]').val();
+            var password = $('input[name="password"]').val();
+
+            var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                    $('.alert').removeAttr('hidden');
+                }
+            }
+
+            if (url && username && password) {
+                xmlhttp.open("POST", url, true);
+                // xmlhttp.setRequestHeader("Content-Type","multipart/form-data");
+                xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+                xmlhttp.send(formData);
+
+                // xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                // xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+                // xmlhttp.send(JSON.stringify({ "message": "hello there!" }));
+            }
+        }
+    </script>
+</body>
+
+</html>

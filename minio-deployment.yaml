@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: minio
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: minio
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: minio
+    spec:
+      containers:
+      - args:
+        - server
+        - /data
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio1234
+        image: minio/minio:RELEASE.2020-03-19T21-49-00Z
+        imagePullPolicy: ""
+        name: minio
+        ports:
+        - containerPort: 9000
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
